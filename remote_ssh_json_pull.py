@@ -2,7 +2,7 @@
 #sudo pip3 install -U netmiko
 
 #!/usr/bin/env python
-
+import json
 from netmiko import ConnectHandler
 
 nx_os = {
@@ -14,8 +14,11 @@ nx_os = {
 	'port': 8181
 		}
 
+
 net_connect = ConnectHandler(**nx_os)
-output = net_connect.send_command('show ip int brief')
-print(output)
+output = net_connect.send_command('show ip int brief | json-pretty')
 
+json_data = json.loads(output)
 
+print(json_data['TABLE_intf']['ROW_intf'][0]['intf-name'])
+print(json_data['TABLE_intf']['ROW_intf'][0]['prefix'])
